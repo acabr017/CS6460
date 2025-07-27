@@ -1,38 +1,39 @@
-import {React, useEffect, useMemo, useState} from 'react'
-import AxiosInstance from './axios'
-import {Box} from '@mui/material'
+import React from 'react';
+import { Box, Typography, Paper } from '@mui/material';
 
-const Home = () =>{
-	const [myData, setMyData] = useState()
-	const [loading, setLoading] = useState(true)
+const Home = () => {
+  return (
+    <Box sx={{ p: 4 }}>
+      <Paper elevation={3} sx={{ p: 4, textAlign: 'center' }}>
+        <Typography variant="h3" gutterBottom>
+          The Long View
+        </Typography>
 
-	const GetData = () => {
-		AxiosInstance.get('users/users/').then((res) => {
-			setMyData(res.data)
-			console.log(res.data)
-			setLoading(false)
-		})
-	}
+        <Typography variant="h6" color="text.secondary" gutterBottom>
+          Welcome to tthe Long View - a year-long curriculum planning utility.
+        </Typography>
 
-	useEffect(() =>{
-		GetData();
-	}, [])
-	return(
-		<div>
-			{/* { loading ? <p>Loading data...</p> :
-			<div>
-				{myData.map((item, index) => (
-					<Box key={index} sx={{p:2, m:2, boxShadow:3}}>
-						<div>ID: {item.id}</div>
-						<div>Email: {item.email}</div>
-					</Box>
-				)
-				)}
-			</div>
-			} */}
-			Home Page
-		</div>
-	)
-}
+        <Typography variant="body1" sx={{ mt: 2 }}>
+          Use this tool to create and manage your school years, register your classes,
+          and plan curriculum units on an interactive calendar.
+        </Typography>
 
-export default Home
+        <Typography variant="body1" sx={{ mt: 2 }}>
+          💡 To get started:
+        </Typography>
+
+        <Typography variant="body2" sx={{ mt: 1 }}>
+          • Go to <strong>School Years</strong> to create a school year. You can include out-of-service/non-instructional dates, as well as define terms.<br />
+          • Register <strong>Classes</strong> and attach them to a school year.<br />
+          • Create <strong>Units</strong>, register them to a class, and drag them onto the calendar to schedule them.<br />
+        </Typography>
+
+        <Typography variant="body2" sx={{ mt: 2, fontStyle: 'italic' }}>
+          All your data is synced between the calendar and unit views.
+        </Typography>
+      </Paper>
+    </Box>
+  );
+};
+
+export default Home;

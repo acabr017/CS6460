@@ -91,10 +91,10 @@ export default function MyMenu() {
   return (
     <>
       <List subheader={<ListSubheader>Navigation</ListSubheader>}>
-        <ListItemButton component={Link} to="/calendar1" selected={path === "/calendar1"}>
+        {/* <ListItemButton component={Link} to="/calendar1" selected={path === "/calendar1"}>
           <ListItemIcon><CalendarMonthIcon /></ListItemIcon>
           <ListItemText primary="Calendar #1" />
-        </ListItemButton>
+        </ListItemButton> */}
 
         {/* Submenus */}
         <SchoolYearSubmenu
