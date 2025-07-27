@@ -19,7 +19,7 @@ const Home = () =>{
 	}, [])
 	return(
 		<div>
-			{ loading ? <p>Loading data...</p> :
+			{/* { loading ? <p>Loading data...</p> :
 			<div>
 				{myData.map((item, index) => (
 					<Box key={index} sx={{p:2, m:2, boxShadow:3}}>
@@ -29,7 +29,8 @@ const Home = () =>{
 				)
 				)}
 			</div>
-			}
+			} */}
+			Home Page
 		</div>
 	)
 }

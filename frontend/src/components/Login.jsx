@@ -9,12 +9,16 @@ import {useNavigate} from 'react-router'
 import {useForm} from 'react-hook-form'
 import AxiosInstance from './axios'
 import MyMessage from './Message'
+import { useContext } from 'react';
+import { SchoolYearContext } from './SchoolYearContext';
+
 
 
 const Login = () =>{
 	const navigate = useNavigate()
 	const {handleSubmit, control} = useForm()
 	const [ShowMessage, setShowMessage] = useState(false)
+	const { fetchSchoolYears } = useContext(SchoolYearContext);
 
 	const submission = (data) => {
 		AxiosInstance.post(
@@ -22,9 +26,10 @@ const Login = () =>{
 				email: data.email,
 				password: data.password,
 			})
-			.then((response) => {
+			.then(async (response) => {
 				console.log(response)
 				localStorage.setItem('Token', response.data.token)
+				await fetchSchoolYears();
 				navigate('/')
 			})
 			.catch((error) => {

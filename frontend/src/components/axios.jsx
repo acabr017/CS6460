@@ -30,9 +30,26 @@ AxiosInstance.interceptors.response.use(
 		return response
 	},
 	(error) =>{
-		if (error.response && error.response.status === 401){
-			localStorage.removeItem('Token')
+		// if (error.response && error.response.status === 401){
+		// 	localStorage.removeItem('Token')
+		// }
+		if (error.response) {
+			console.error("Axios error response:", {
+				status: error.response.status,
+				data: error.response.data,
+				headers: error.response.headers,
+			});
+
+			if (error.response.status === 401) {
+				localStorage.removeItem('Token');
+			}
+		} else if (error.request) {
+			console.error("No response recieved. Request was:", error.request);
+		} else {
+			console.error("Axios config error:", error.message);
 		}
+
+		return Promise.reject(error);
 	}
 )
 export default AxiosInstance

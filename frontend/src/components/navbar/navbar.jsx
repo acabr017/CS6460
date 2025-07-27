@@ -6,6 +6,7 @@ import AppBar from '@mui/material/AppBar';
 import CssBaseline from '@mui/material/CssBaseline';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
 import MyMenu from './menu'
 import ShortMenu from './shortmenu'
 import MenuOpenIcon from '@mui/icons-material/MenuOpen';
@@ -26,7 +27,7 @@ export default function NavBar({content}) {
   // const {content} = data
   const location = useLocation();
 	const path = location.pathname
-	const [isBigMenu, setIsBigMenu] = useState(false);
+	const [isBigMenu, setIsBigMenu] = useState(true);
   const navigate = useNavigate()
 
 	const changeMenu = () => {
@@ -51,6 +52,9 @@ export default function NavBar({content}) {
   const handleClose = () => {
     setAnchorEl(null);
   };
+  const pages = [
+  { label: 'Home', path: '/' },
+];
 
   return (
     <Box sx={{ display: 'flex' }}>
@@ -61,16 +65,27 @@ export default function NavBar({content}) {
         <Toolbar>
 
           {/* This is the icon button to expand/contract the menu */}
-          <IconButton onClick={changeMenu} sx={{color: 'white', marginRight: '40px'}}>
+          <IconButton onClick={changeMenu} sx={{color: 'white', marginRight: '40px', backgroundColor:'transparent'}}>
               {isBigMenu ? <MenuOpenIcon/> : <MenuIcon/>} 
           </IconButton>
 
         {/* This gives me the text to the right of the menu icon, for title purposes. */}
-        <Typography variant="h6" noWrap component="div">
-            Clipped drawer
-        </Typography>
-
+        {/* <Typography variant="h6" noWrap component="div">
         
+        </Typography> */}
+
+        <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+            {pages.map((page) => (
+              <Button
+                key={page}
+                component={Link}
+                to={page.path}
+                sx={{ my: 2, color: 'white', display: 'block' }}
+              >
+                {page.label}
+              </Button>
+            ))}
+          </Box>
         <IconButton
           size="large"
           aria-label="account of current user"
@@ -111,9 +126,7 @@ export default function NavBar({content}) {
           </>
         )}
         </Menu>
-            
-
-        
+  
         </Toolbar>
         
       </AppBar>

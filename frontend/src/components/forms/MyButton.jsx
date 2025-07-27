@@ -4,8 +4,8 @@ import Button from '@mui/material/Button';
 import '../../App.css'
 
 export default function MyButton(data) {
-	const {label, type} = data
+	const {label, type, sx} = data
 	return (
-		<Button type={type} variant="contained" className={"myButton"}>{label}</Button>
+		<Button type={type} variant="contained" className={"myButton"} sx={sx}>{label}</Button>
 	);
 	}

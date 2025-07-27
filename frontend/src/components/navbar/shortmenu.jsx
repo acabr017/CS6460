@@ -28,11 +28,11 @@ export default function ShortMenu() {
       aria-labelledby="nested-list-subheader"
     >
 
-	  <ListItemButton component={Link} to="/" selected={path === "/"} sx={{display:'flex', justifyContent:'center'}}>
+	  {/* <ListItemButton component={Link} to="/" selected={path === "/"} sx={{display:'flex', justifyContent:'center'}}>
         <ListItemIcon sx={{display:'flex', justifyContent:'center'}}>
           <OtherHousesIcon />
         </ListItemIcon>
-      </ListItemButton>
+      </ListItemButton> */}
 
       <ListItemButton component={Link} to="/calendar1" selected={path === "/calendar1"} sx={{display:'flex', justifyContent:'center'}}>
         <ListItemIcon sx={{display:'flex', justifyContent:'center'}}>
@@ -41,13 +41,13 @@ export default function ShortMenu() {
       </ListItemButton>
 
 
-      <ListItemButton onClick={handleClick} sx={{display:'flex', justifyContent:'center'}}>
+      <ListItemButton component={Link} to="/school_years" selected={path === "/school_years"} sx={{display:'flex', justifyContent:'center'}}>
         <ListItemIcon sx={{display:'flex', justifyContent:'center'}}>
           <SchoolIcon />
         </ListItemIcon>
       </ListItemButton>
 
-      <ListItemButton onClick={handleClick} sx={{display:'flex', justifyContent:'center'}}>
+      <ListItemButton component={Link} to="/classes" selected={path === "/classes"} sx={{display:'flex', justifyContent:'center'}}>
         <ListItemIcon sx={{display:'flex', justifyContent:'center'}}>
           <ClassIcon />
         </ListItemIcon>

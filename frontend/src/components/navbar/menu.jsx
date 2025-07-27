@@ -1,135 +1,142 @@
-import * as React from 'react';
-import ListSubheader from '@mui/material/ListSubheader';
-import List from '@mui/material/List';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import Collapse from '@mui/material/Collapse';
-import OtherHousesIcon from '@mui/icons-material/OtherHouses';
-import SchoolIcon from '@mui/icons-material/School';
-import ClassIcon from '@mui/icons-material/Class';
-import AddIcon from '@mui/icons-material/Add';
-import ModeEditIcon from '@mui/icons-material/ModeEdit';
-import DeleteIcon from '@mui/icons-material/Delete';
-import ExpandLess from '@mui/icons-material/ExpandLess';
-import ExpandMore from '@mui/icons-material/ExpandMore';
-import {Link, useLocation} from 'react-router'
+import React, { useState, useEffect, useContext } from 'react';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import { useNavigate, useLocation, Link } from 'react-router';
+import {
+  List, ListItemButton, ListItemIcon, ListItemText, ListSubheader,
+  Dialog, DialogActions, DialogContent, DialogTitle, Button
+} from '@mui/material';
+import AxiosInstance from '../axios';
+import { SchoolYearContext } from '../SchoolYearContext';
+import { ClassContext } from '../ClassContext';
+
+import SchoolYearSubmenu from './SchoolYearSubMenu';
+import ClassSubmenu from './ClassSubMenu';
+import UnitSubmenu from './UnitSubMenu';
 
 export default function MyMenu() {
-  const [open, setOpen] = React.useState(true);
+  const { schoolYears, fetchSchoolYears } = useContext(SchoolYearContext);
+  const { classes, fetchClasses } = useContext(ClassContext);
 
-  const handleClick = () => {
-    setOpen(!open);
+  const [schoolYearOpen, setSchoolYearOpen] = useState(true);
+  const [classesOpen, setClassesOpen] = useState(false);
+  const [unitsOpen, setUnitsOpen] = useState(false);
+
+  // const [selectedClassId, setSelectedClassId] = useState(null);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const path = location.pathname;
+
+  const [openDialog, setOpenDialog] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [deleteType, setDeleteType] = useState(null);
+
+  // const selectedClass = classes.find(cls => cls.id === selectedClassId);
+
+
+  const schoolYearMatch = path.match(/\/school_year\/calendar\/(\d+)/);
+  const currentSchoolYearId = schoolYearMatch ? parseInt(schoolYearMatch[1]) : null;
+
+  const classesForSchoolYear = currentSchoolYearId
+    ? classes.filter(cls => cls.school_year === currentSchoolYearId)
+    : [];
+
+  // Handlers for delete actions
+  const handleDeleteClick = (item) => {
+    setSelectedItem(item);
+    setDeleteType('schoolYear');
+    setOpenDialog(true);
+  };
+  const handleDeleteClassClick = (item) => {
+    setSelectedItem(item);
+    setDeleteType('class');
+    setOpenDialog(true);
+  };
+  const handleDeleteUnitClick = (item) => {
+    setSelectedItem(item);
+    setDeleteType('unit');
+    setOpenDialog(true);
   };
 
-  const location = useLocation();
-	const path = location.pathname
-	// console.log(path)
+  const handleCancelDelete = () => {
+    setOpenDialog(false);
+    setSelectedItem(null);
+    setDeleteType(null);
+  };
+
+  const handleConfirmDelete = async () => {
+    try {
+      if (deleteType === 'schoolYear') {
+        await AxiosInstance.delete(`schoolyear/${selectedItem.id}/`);
+        await fetchSchoolYears();
+      } else if (deleteType === 'class') {
+        await AxiosInstance.delete(`class/${selectedItem.id}/`);
+        await fetchClasses();
+      } else if (deleteType === 'unit') {
+        await AxiosInstance.delete(`unit/${selectedItem.id}/`);
+        await fetchClasses();
+      }
+      navigate('/');
+    } catch (err) {
+      console.error('Deletion failed:', err);
+    } finally {
+      handleCancelDelete();
+    }
+  };
+
+  useEffect(() => {
+    fetchSchoolYears();
+    fetchClasses();
+  }, []);
+
   return (
-	<>
-    <List
-      sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}
-      component="nav"
-      aria-labelledby="nested-list-subheader"
-      subheader={
-        <ListSubheader component="div" id="nested-list-subheader">
-           {/* this will change what the menu header title is */}
-        </ListSubheader>
-      }
-    >
+    <>
+      <List subheader={<ListSubheader>Navigation</ListSubheader>}>
+        <ListItemButton component={Link} to="/calendar1" selected={path === "/calendar1"}>
+          <ListItemIcon><CalendarMonthIcon /></ListItemIcon>
+          <ListItemText primary="Calendar #1" />
+        </ListItemButton>
 
-	  <ListItemButton component={Link} to="/" selected={path === "/"}>
-        <ListItemIcon>
-          <OtherHousesIcon />
-        </ListItemIcon>
-        <ListItemText primary="Home" />
-      </ListItemButton>
+        {/* Submenus */}
+        <SchoolYearSubmenu
+          schoolYearOpen={schoolYearOpen}
+          setSchoolYearOpen={setSchoolYearOpen}
+          path={path}  
+          navigate={navigate}
+          handleDeleteClick={handleDeleteClick}
+        />
 
-    <ListItemButton component={Link} to="/calendar1" selected={path === "/calendar1"}>
-        <ListItemIcon>
-          <CalendarMonthIcon />
-        </ListItemIcon>
-        <ListItemText primary={"Calendar #1"} />
-      </ListItemButton>
+        <ClassSubmenu
+          classesOpen={classesOpen}
+          setClassesOpen={setClassesOpen}
+          path={path}
+          navigate={navigate}
+          handleDeleteClassClick={handleDeleteClassClick}
+          // selectedClassId={selectedClassId}
+          // setSelectedClassId={setSelectedClassId}
+          classesForSchoolYear={classesForSchoolYear}
+          currentSchoolYearId={currentSchoolYearId}
+        />
 
+        <UnitSubmenu
+          unitsOpen={unitsOpen}
+          setUnitsOpen={setUnitsOpen}
+          currentSchoolYearId={currentSchoolYearId}
+          // selectedClass={selectedClass}
+          handleDeleteUnitClick={handleDeleteUnitClick}
+        />
+      </List>
 
-      <ListItemButton onClick={handleClick}>
-        <ListItemIcon>
-          <SchoolIcon />
-        </ListItemIcon>
-        <ListItemText primary="School Year" />
-        {open ? <ExpandLess /> : <ExpandMore />}
-      </ListItemButton>
-      <Collapse in={open} timeout="auto" unmountOnExit>
-        <List component="div" disablePadding>
-          <ListItemButton sx={{ pl: 4 }} component={Link} to="/create_school_year">
-            <ListItemIcon>
-              <AddIcon />
-            </ListItemIcon>
-            <ListItemText primary="Add School Year" />
-          </ListItemButton>
-
-		  <ListItemButton sx={{ pl: 4 }} component={Link} to="/edit_school_year/:id">
-            <ListItemIcon>
-              <ModeEditIcon />
-            </ListItemIcon>
-            <ListItemText primary="Edit School Year" />
-          </ListItemButton>
-
-		  <ListItemButton sx={{ pl: 4 }} component={Link} to="/delete_school_year/:id">
-            <ListItemIcon>
-              <DeleteIcon />
-            </ListItemIcon>
-            <ListItemText primary="Delete School Year" />
-          </ListItemButton>
-        </List>
-      </Collapse>
-
-    </List>
-
-	<List
-      sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}
-      component="nav"
-      aria-labelledby="nested-list-subheader"
-      subheader={
-        <ListSubheader component="div" id="nested-list-subheader">
-           {/* this will change what the menu header title is */}
-        </ListSubheader>
-      }
-    >
-	  <ListItemButton onClick={handleClick}>
-        <ListItemIcon>
-          <ClassIcon />
-        </ListItemIcon>
-        <ListItemText primary="Classes" />
-        {open ? <ExpandLess /> : <ExpandMore />}
-      </ListItemButton>
-      <Collapse in={open} timeout="auto" unmountOnExit>
-        <List component="div" disablePadding>
-          <ListItemButton sx={{ pl: 4 }}>
-            <ListItemIcon>
-              <AddIcon />
-            </ListItemIcon>
-            <ListItemText primary="Add Class" />
-          </ListItemButton>
-
-		  <ListItemButton sx={{ pl: 4 }}>
-            <ListItemIcon>
-              <ModeEditIcon />
-            </ListItemIcon>
-            <ListItemText primary="Edit Class" />
-          </ListItemButton>
-
-		  <ListItemButton sx={{ pl: 4 }}>
-            <ListItemIcon>
-              <DeleteIcon />
-            </ListItemIcon>
-            <ListItemText primary="Delete Class" />
-          </ListItemButton>
-        </List>
-      </Collapse>
-    </List>
-	</>
+      {/* Delete confirmation dialog */}
+      <Dialog open={openDialog} onClose={handleCancelDelete}>
+        <DialogTitle>Delete {deleteType}</DialogTitle>
+        <DialogContent>
+          Are you sure you want to delete <strong>{selectedItem?.name || selectedItem?.schoolyear}</strong>?
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCancelDelete}>Cancel</Button>
+          <Button onClick={handleConfirmDelete} color="error">Delete</Button>
+        </DialogActions>
+      </Dialog>
+    </>
   );
 }
