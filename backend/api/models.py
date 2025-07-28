@@ -7,15 +7,15 @@ User = get_user_model()
 
 
 class Account(models.Model):
-    email = models.CharField(unique=True)
-    pw_hash = models.CharField(unique=True)
+    email = models.CharField(max_length=100, unique=True)
+    pw_hash = models.CharField(max_length=500, unique=True)
 
     def __str__(self):
         return self.email
 
 
 class SchoolYear(models.Model):
-    schoolyear = models.CharField()
+    schoolyear = models.CharField(max_length=100)
     start_date = models.DateField()
     end_date = models.DateField()
     weekends = models.BooleanField()
@@ -49,8 +49,8 @@ class OutOfServiceDay(models.Model):
 
 class Class(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    name = models.CharField()
-    description = models.CharField(blank=True)
+    name = models.CharField(max_length=100)
+    description = models.CharField(max_length=300, blank=True)
     school_year = models.ForeignKey(
         SchoolYear, on_delete=models.SET_NULL, null=True, blank=True
     )
@@ -63,7 +63,7 @@ class Unit(models.Model):
     class_obj = models.ForeignKey(
         Class, on_delete=models.SET_NULL, null=True, blank=True, related_name="units"
     )
-    name = models.CharField()
+    name = models.CharField(max_length=100)
     length = models.IntegerField()
     start_date = models.DateField(null=True, blank=True)
     end_date = models.DateField(null=True, blank=True)
