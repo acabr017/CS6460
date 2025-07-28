@@ -39,3 +39,6 @@ DATABASES = {
         conn_max_age=600,
     )
 }
+
+EMAIL_HOST_USER = os.environ["EMAIL_HOST_USER"]
+EMAIL_HOST_PASSWORD = os.environ["EMAIL_HOST_PASSWORD"]
