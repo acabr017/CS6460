@@ -42,10 +42,11 @@ const CreateUnit = () => {
 					class_obj: response.data.class_obj
 				});
 				await fetchUnits();
-				await fetchClasses();
+				// await fetchClasses();
 			}
 			console.log('Units cloned successfully');
 		}
+		await fetchUnits();
 	} catch (error) {
 		console.error('Error creating unit:', error);
 	}

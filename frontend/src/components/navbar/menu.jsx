@@ -8,6 +8,7 @@ import {
 import AxiosInstance from '../axios';
 import { SchoolYearContext } from '../SchoolYearContext';
 import { ClassContext } from '../ClassContext';
+import { UnitContext } from '../UnitsContext';
 
 import SchoolYearSubmenu from './SchoolYearSubMenu';
 import ClassSubmenu from './ClassSubMenu';
@@ -16,6 +17,7 @@ import UnitSubmenu from './UnitSubMenu';
 export default function MyMenu() {
   const { schoolYears, fetchSchoolYears } = useContext(SchoolYearContext);
   const { classes, fetchClasses } = useContext(ClassContext);
+  const { fetchUnits } = useContext(UnitContext);
 
   const [schoolYearOpen, setSchoolYearOpen] = useState(true);
   const [classesOpen, setClassesOpen] = useState(false);
@@ -73,7 +75,7 @@ export default function MyMenu() {
         await fetchClasses();
       } else if (deleteType === 'unit') {
         await AxiosInstance.delete(`unit/${selectedItem.id}/`);
-        await fetchClasses();
+        await fetchUnits();
       }
       navigate('/');
     } catch (err) {

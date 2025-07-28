@@ -70,7 +70,7 @@ export default function UnitSubmenu({
     
     await AxiosInstance.patch(`/unit/${unit.id}/`, { color: color.hex });
 
-    fetchUnits();
+    await fetchUnits();
   };
 
 
