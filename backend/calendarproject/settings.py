@@ -112,14 +112,14 @@ DATABASES = {
         "PASSWORD": os.environ.get("PASSWORD"),
         "HOST": os.environ.get("HOST"),
         "PORT": os.environ.get("PORT"),
-    # "default": {
-    #     "ENGINE": config("ENGINE"),
-    #     "NAME": config("NAME"),
-    #     "USER": config("USER"),
-    #     "PASSWORD": config("PASSWORD"),
-    #     "HOST": config("HOST"),
-    #     "PORT": config("PORT"),
-    # }
+        # "default": {
+        #     "ENGINE": config("ENGINE"),
+        #     "NAME": config("NAME"),
+        #     "USER": config("USER"),
+        #     "PASSWORD": config("PASSWORD"),
+        #     "HOST": config("HOST"),
+        #     "PORT": config("PORT"),
+    }
 }
 
 # Password validation
